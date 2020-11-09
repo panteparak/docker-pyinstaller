@@ -1,4 +1,4 @@
-FROM ubuntu:12.04
+FROM ubuntu:18.04
 SHELL ["/bin/bash", "-i", "-c"]
 
 ARG PYTHON_VERSION=3.7.3
@@ -12,22 +12,36 @@ COPY entrypoint.sh /entrypoint.sh
 
 RUN \
     set -x \
+    && export TERM=xterm \
     # update system
     && apt-get update \
     # install requirements
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y \
+        make \
         build-essential \
-        ca-certificates \
-        curl \
-        git \
+        libssl-dev \
+        zlib1g-dev \
         libbz2-dev \
         libreadline-dev \
         libsqlite3-dev \
-        libssl-dev \
-        zlib1g-dev \
+        wget \
+        curl \
+        llvm \
+        libncurses5-dev \
+        libncursesw5-dev \
+        xz-utils \
+        tk-dev \
+        libffi-dev \
+        liblzma-dev \
+        python-openssl \
+        git \
+        ca-certificates \
     # install pyenv
     && echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc \
     && echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc \
+    && export CFLAGS="-I$HOME/openssl/include" \
+    && export LDFLAGS=-L$HOME/openssl/lib \
+    && export SSH=$HOME/openssl \
     && source ~/.bashrc \
     && curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash \
     && echo 'eval "$(pyenv init -)"' >> ~/.bashrc \
