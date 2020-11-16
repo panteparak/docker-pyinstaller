@@ -2,6 +2,11 @@ FROM ubuntu:16.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
+# set timezone 
+ENV TZ=UTC
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+
 ARG WINE_VERSION=winehq-staging
 ARG PYTHON_VERSION=3.7.3
 ARG PYINSTALLER_VERSION=3.4
@@ -10,7 +15,7 @@ ARG PYINSTALLER_VERSION=3.4
 RUN set -x \
     && dpkg --add-architecture i386 \
     && apt-get update -qy \
-    && apt-get install --no-install-recommends -qfy apt-transport-https software-properties-common wget \
+    && apt-get install --no-install-recommends -qfy apt-transport-https software-properties-common wget libcurl4-openssl-dev libssl-dev \\
     && wget -nv https://dl.winehq.org/wine-builds/winehq.key \
     && apt-key add winehq.key \
     && add-apt-repository 'https://dl.winehq.org/wine-builds/ubuntu/' \

@@ -3,6 +3,9 @@ SHELL ["/bin/bash", "-i", "-c"]
 
 ARG PYTHON_VERSION=3.7.3
 ARG PYINSTALLER_VERSION=3.4
+# set timezone 
+ENV TZ=UTC
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 ENV PYPI_URL=https://pypi.python.org/
 ENV PYPI_INDEX_URL=https://pypi.python.org/simple
@@ -36,6 +39,7 @@ RUN \
         python-openssl \
         git \
         ca-certificates \
+        libcurl4-openssl-dev \
     # install pyenv
     && echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc \
     && echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc \

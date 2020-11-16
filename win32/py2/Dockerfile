@@ -2,6 +2,11 @@ FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
+# set timezone 
+ENV TZ=UTC
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+
 ARG WINE_VERSION=winehq-devel
 ARG PYTHON_VERSION=2.7.12
 ARG PYINSTALLER_VERSION=3.3
@@ -10,6 +15,7 @@ ARG PYINSTALLER_VERSION=3.3
 RUN set -x \
     && dpkg --add-architecture i386 \
     && apt-get update -qy \
+    && apt-get install --no-install-recommends -qfy libcurl4-openssl-dev libssl-dev \
     && apt-get install --no-install-recommends -qfy software-properties-common \
     && add-apt-repository ppa:wine/wine-builds \
     && apt-get update -qy \
